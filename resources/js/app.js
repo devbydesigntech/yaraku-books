@@ -8,9 +8,6 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-//Import Vue Filter
-require('./filter'); 
-
 //Import progressbar
 require('./progressbar'); 
 
