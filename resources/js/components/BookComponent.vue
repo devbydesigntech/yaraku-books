@@ -6,9 +6,20 @@
               <div class="card-header">
                 <h3 class="card-title">Books</h3>
 
+                <!-- Add New Book -->
                 <div class="card-tools">
                     <button class="btn btn-success" data-toggle="modal" data-target="#addNew" @click="openModalWindow">Add New <i class="fas fa-user-plus fa-fw"></i></button>
                 </div>
+
+                <!-- Sort -->
+                <div class="float-left mt-3">
+                    <span>Sort: </span>
+                    <a @click="sort('title')" href="#">Title<span v-if="sortBy === 'title'"></span></a>
+                    |
+                    <a @click="sort('author')" href="#">Author<span v-if="sortBy === 'author'"></span></a>
+                </div>
+
+                <!-- Search Bar -->
                 <div class="float-right">
                 <div class="input-group input-group-sm">
                     <input class="form-control form-control-navbar" type="search" name="q" placeholder="Search by Title or Author" aria-label="Search" v-model="searchQuery">
@@ -17,18 +28,15 @@
                     </button>
                     </div>
                 </div>
-                       
-
-
                 </div>
                 
               </div>
              
+             <!-- Data Table -->
               <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                   <thead class="thead-light">
                     <tr>
-                        <th>ID</th>
                         <th>Title</th>
                         <th>Author</th>
                         <th></th>
@@ -36,11 +44,10 @@
                   </thead> 
                     <tbody>
                     <tr v-for="book in temp" :key="book.id">
-                        <td>{{ book.id }}</td>
                         <td>{{ book.title }}</td>
                         <td>{{ book.author }}</td>
-
                         <td>
+                            <!-- Edit/Delete -->
                             <a href="#" data-id="book.id" @click="editModalWindow(book)">
                                 <button class="btn btn-warning">Edit</button>
                             </a>
@@ -55,53 +62,49 @@
               <div class="card-footer">
               </div>
             </div>
-           
           </div>
         </div>
+        <!-- Modal Window -->
+        <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
 
+                <h5 v-show="!editMode" class="modal-title" id="addNewLabel">Add New Book</h5>
+                <h5 v-show="editMode" class="modal-title" id="addNewLabel">Update Book</h5>
 
-            <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-
-                    <h5 v-show="!editMode" class="modal-title" id="addNewLabel">Add New Book</h5>
-                    <h5 v-show="editMode" class="modal-title" id="addNewLabel">Update Book</h5>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <form @submit.prevent="editMode ? updateBook() : createBook()">
-                <div class="modal-body">
-                    <div class="form-group"><span><strong>Title</strong></span>
-                        <input v-model="form.title" type="text" name="title"
-                            placeholder="Title"
-                            class="form-control" :class="{ 'is-invalid': form.errors.has('title') }">
-                        <has-error :form="form" field="title"></has-error>
-                    </div>
-                    <div class="form-group"><span><strong>Author</strong></span>
-                        <input v-model="form.author" type="text" name="author"
-                            placeholder="Author"
-                            class="form-control" :class="{ 'is-invalid': form.errors.has('author') }">
-                        <has-error :form="form" field="author"></has-error>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button v-show="editMode" type="submit" class="btn btn-primary">Update</button>
-                    <button v-show="!editMode" type="submit" class="btn btn-primary">Create</button>
-                </div>
-
-                </form>
-
-                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            </div>
-    </div>
 
+            <form @submit.prevent="editMode ? updateBook() : createBook()">
+            <div class="modal-body">
+                <div class="form-group"><span><strong>Title</strong></span>
+                    <input v-model="form.title" type="text" name="title"
+                        placeholder="Title"
+                        class="form-control" :class="{ 'is-invalid': form.errors.has('title') }">
+                    <has-error :form="form" field="title"></has-error>
+                </div>
+                <div class="form-group"><span><strong>Author</strong></span>
+                    <input v-model="form.author" type="text" name="author"
+                        placeholder="Author"
+                        class="form-control" :class="{ 'is-invalid': form.errors.has('author') }">
+                    <has-error :form="form" field="author"></has-error>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button v-show="editMode" type="submit" class="btn btn-primary">Update</button>
+                <button v-show="!editMode" type="submit" class="btn btn-primary">Create</button>
+            </div>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div> 
+    <!-- End Container -->
 </template>
 
 <script>
@@ -116,11 +119,15 @@
                     author: ''
                 }),
                 searchQuery:'',
-                temp:''
+                temp:'',
+                sortBy: 'title',
+                sortDirection :'descending'
             }
         },
 
         watch:{
+
+            //Search by Title or Author
             searchQuery() {
                 if (this.searchQuery.length > 0) {
                     this.temp = this.books.filter((results) => {
@@ -136,8 +143,28 @@
             }
         },
 
+
         methods: {
+
+        //Sort by Title or Author with toggle
+        sort(prop) {
+            if (prop === this.sortBy) {
+                this.sortDirection = this.sortDirection === 'ascending' ? 'descending' : 'ascending';
+            } else {
+                this.sortDirection = 'ascending';
+            }
+            this.sortBy = prop;
+
+            this.books.sort((a,b) => {
+                if(a[prop] < b[prop]) {
+                    return this.sortDirection === 'ascending' ? -1 : 1;
+                } else if (a[prop] > b[prop]) {
+                    return this.sortDirection === 'ascending' ? 1 : -1;
+                }
+            })
+        },
         
+        // Modal Window for Editing
         editModalWindow(book){
            this.form.clear();
            this.editMode = true
@@ -172,10 +199,9 @@
 
         axios.get("api/book").then( data => (this.books = this.temp = data.data));
 
-          //pick data from controller and push it into book object
-
         },
 
+        // Add New Book
         createBook(){
 
             this.$Progress.start()
@@ -199,10 +225,9 @@
                    console.log("Error......")
                 })
 
-     
-
-            //this.loadBooks();
           },
+
+          //Modal Window for Delete
           deleteBook(id) {
             Swal.fire({
               title: 'Are you sure?',
@@ -224,7 +249,7 @@
                               'success'
                             )
                     this.loadBooks();
-
+                    
                     }).catch(() => {
                         Swal.fire({
                           icon: 'error',
@@ -233,19 +258,16 @@
                         })
                     })
                 }
-
             })
           }
         },
 
+        //Return List of Books after Add
         created() { 
             this.loadBooks();
-
             Fire.$on('AfterCreatedBookLoadIt',()=>{ //custom events fire on
                 this.loadBooks();
             });
-
         },
-
     }
 </script> 

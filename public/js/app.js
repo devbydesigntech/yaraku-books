@@ -2014,6 +2014,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2025,10 +2028,13 @@ __webpack_require__.r(__webpack_exports__);
         author: ''
       }),
       searchQuery: '',
-      temp: ''
+      temp: '',
+      sortBy: 'title',
+      sortDirection: 'descending'
     };
   },
   watch: {
+    //Search by Title or Author
     searchQuery: function searchQuery() {
       var _this = this;
 
@@ -2045,6 +2051,26 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    //Sort by Title or Author with toggle
+    sort: function sort(prop) {
+      var _this2 = this;
+
+      if (prop === this.sortBy) {
+        this.sortDirection = this.sortDirection === 'ascending' ? 'descending' : 'ascending';
+      } else {
+        this.sortDirection = 'ascending';
+      }
+
+      this.sortBy = prop;
+      this.books.sort(function (a, b) {
+        if (a[prop] < b[prop]) {
+          return _this2.sortDirection === 'ascending' ? -1 : 1;
+        } else if (a[prop] > b[prop]) {
+          return _this2.sortDirection === 'ascending' ? 1 : -1;
+        }
+      });
+    },
+    // Modal Window for Editing
     editModalWindow: function editModalWindow(book) {
       this.form.clear();
       this.editMode = true;
@@ -2070,14 +2096,15 @@ __webpack_require__.r(__webpack_exports__);
       $('#addNew').modal('show');
     },
     loadBooks: function loadBooks() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get("api/book").then(function (data) {
-        return _this2.books = _this2.temp = data.data;
-      }); //pick data from controller and push it into book object
+        return _this3.books = _this3.temp = data.data;
+      });
     },
+    // Add New Book
     createBook: function createBook() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.$Progress.start();
       this.form.post('api/book').then(function () {
@@ -2088,15 +2115,16 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Book created successfully'
         });
 
-        _this3.$Progress.finish();
+        _this4.$Progress.finish();
 
         $('#addNew').modal('hide');
       })["catch"](function () {
         console.log("Error......");
-      }); //this.loadBooks();
+      });
     },
+    //Modal Window for Delete
     deleteBook: function deleteBook(id) {
-      var _this4 = this;
+      var _this5 = this;
 
       Swal.fire({
         title: 'Are you sure?',
@@ -2109,10 +2137,10 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           //Send Request to server
-          _this4.form["delete"]('api/book/' + id).then(function (response) {
+          _this5.form["delete"]('api/book/' + id).then(function (response) {
             Swal.fire('Deleted!', 'Book deleted successfully', 'success');
 
-            _this4.loadBooks();
+            _this5.loadBooks();
           })["catch"](function () {
             Swal.fire({
               icon: 'error',
@@ -2124,13 +2152,14 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
+  //Return List of Books after Add
   created: function created() {
-    var _this5 = this;
+    var _this6 = this;
 
     this.loadBooks();
     Fire.$on('AfterCreatedBookLoadIt', function () {
       //custom events fire on
-      _this5.loadBooks();
+      _this6.loadBooks();
     });
   }
 });
@@ -41937,6 +41966,42 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
+            _c("div", { staticClass: "float-left mt-3" }, [
+              _c("span", [_vm._v("Sort: ")]),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      return _vm.sort("title")
+                    }
+                  }
+                },
+                [
+                  _vm._v("Title"),
+                  _vm.sortBy === "title" ? _c("span") : _vm._e()
+                ]
+              ),
+              _vm._v("\n                |\n                "),
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      return _vm.sort("author")
+                    }
+                  }
+                },
+                [
+                  _vm._v("Author"),
+                  _vm.sortBy === "author" ? _c("span") : _vm._e()
+                ]
+              )
+            ]),
+            _vm._v(" "),
             _c("div", { staticClass: "float-right" }, [
               _c("div", { staticClass: "input-group input-group-sm" }, [
                 _c("input", {
@@ -41979,8 +42044,6 @@ var render = function() {
                 "tbody",
                 _vm._l(_vm.temp, function(book) {
                   return _c("tr", { key: book.id }, [
-                    _c("td", [_vm._v(_vm._s(book.id))]),
-                    _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(book.title))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(book.author))]),
@@ -42254,8 +42317,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "thead-light" }, [
       _c("tr", [
-        _c("th", [_vm._v("ID")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Title")]),
         _vm._v(" "),
         _c("th", [_vm._v("Author")]),
