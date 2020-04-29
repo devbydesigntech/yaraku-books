@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Book;
 
-class APIBookController extends Controller
+class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +15,7 @@ class APIBookController extends Controller
      */
     public function index()
     {
-        //
+        return Book::latest()->get();
     }
 
     /**
@@ -24,7 +26,16 @@ class APIBookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'title' => 'required',
+            'author' => 'required',
+        ]);
+
+        return Book::create([
+            'title' => $request['title'],
+            'author' => $request['author'],
+        ]);
+
     }
 
     /**
@@ -47,7 +58,14 @@ class APIBookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'title' => 'required',
+            'author' => 'required'
+        ]);
+
+        $book = Book::findOrFail($id);
+
+        $book->update($request->all());
     }
 
     /**
@@ -58,6 +76,10 @@ class APIBookController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $book = Book::findOrFail($id);
+        $book->delete();
+        return response()->json([
+            'message' => 'Book deleted successfully'
+        ]);
     }
 }
