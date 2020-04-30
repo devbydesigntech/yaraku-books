@@ -2044,16 +2044,15 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       editMode: false,
-      books: {},
+      books: null,
       form: new Form({
-        id: '',
-        title: '',
-        author: ''
+        title: null,
+        author: null
       }),
       searchQuery: '',
       temp: '',
-      sortBy: 'title',
-      sortDirection: 'descending',
+      // sortBy: 'title',
+      // sortDirection: 'descending',
       handlerTitle: '',
       handlerAuthor: ''
     };

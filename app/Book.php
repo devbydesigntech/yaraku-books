@@ -9,4 +9,8 @@ class Book extends Model
     protected $fillable = [
         'title', 'author',
     ];
+
+    protected $hidden = [
+        'id', 'created_at', 'updated_at',
+    ];
 }

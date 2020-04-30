@@ -134,16 +134,15 @@ import XLSX from 'xlsx'
         data() {
             return {
                 editMode: false,
-                books: {},
+                books: null,
                 form: new Form({
-                    id: '',
-                    title : '',
-                    author: ''
+                    title: null,
+                    author: null
                 }),
                 searchQuery: '',
                 temp: '',
-                sortBy: 'title',
-                sortDirection: 'descending',
+                // sortBy: 'title',
+                // sortDirection: 'descending',
                 handlerTitle: '',
                 handlerAuthor:''
 
