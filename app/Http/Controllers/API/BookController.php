@@ -15,8 +15,9 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Book::latest()->get();
+        return Book::select('title', 'author')->latest()->get();
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -36,17 +37,6 @@ class BookController extends Controller
             'author' => $request['author'],
         ]);
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**

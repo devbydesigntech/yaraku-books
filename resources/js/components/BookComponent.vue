@@ -4,11 +4,31 @@
           <div class="col-md-12">
             <div class="card card-primary">
               <div class="card-header">
+                <!-- Export -->
+                <form action="/export" method="GET">
+                    <div class="float-right mr-3">
+                        <div class="float-left pr-2 pt-1">Select: </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="title" value="title" v-model="handlerTitle" @change="loadTitles()"> 
+                            <label class="form-check-label" for="inlineCheckbox1">Title</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="author" value="author" v-model="handlerAuthor" @change="loadAuthors()">
+                            <label class="form-check-label" for="inlineCheckbox2">Author</label>
+                        </div>
+                        <div class="btn btn-outline-primary" @click="CsvExport()">
+                            Export .csv
+                        </div>
+                        <div class="btn btn-outline-primary" @click="XmlExport()">
+                            Export .xml
+                        </div>
+                    </div>
+                </form>
                 <h3 class="card-title">Books</h3>
 
                 <!-- Add New Book -->
                 <div class="card-tools">
-                    <button class="btn btn-success" data-toggle="modal" data-target="#addNew" @click="openModalWindow">Add New <i class="fas fa-user-plus fa-fw"></i></button>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#addNew" @click="openModalWindow">Add New</button>
                 </div>
 
                 <!-- Sort -->
@@ -34,18 +54,18 @@
              
              <!-- Data Table -->
               <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
+                <table class="table table-hover text-nowrap" id="mytable">
                   <thead class="thead-light">
                     <tr>
-                        <th>Title</th>
-                        <th>Author</th>
+                        <th >Title</th>
+                        <th >Author</th>
                         <th></th>
-                  </tr>
+                  </tr> 
                   </thead> 
                     <tbody>
                     <tr v-for="book in temp" :key="book.id">
-                        <td>{{ book.title }}</td>
-                        <td>{{ book.author }}</td>
+                        <td >{{ book.title }}</td>
+                        <td >{{ book.author }}</td>
                         <td>
                             <!-- Edit/Delete -->
                             <a href="#" data-id="book.id" @click="editModalWindow(book)">
@@ -59,7 +79,7 @@
                     </tbody>
                 </table>
               </div>
-              <div class="card-footer">
+              <div class="card-footer"> 
               </div>
             </div>
           </div>
@@ -108,6 +128,8 @@
 </template>
 
 <script>
+import XLSX from 'xlsx'
+
     export default {
         data() {
             return {
@@ -118,15 +140,17 @@
                     title : '',
                     author: ''
                 }),
-                searchQuery:'',
-                temp:'',
+                searchQuery: '',
+                temp: '',
                 sortBy: 'title',
-                sortDirection :'descending'
+                sortDirection: 'descending',
+                handlerTitle: '',
+                handlerAuthor:''
+
             }
         },
 
         watch:{
-
             //Search by Title or Author
             searchQuery() {
                 if (this.searchQuery.length > 0) {
@@ -140,11 +164,41 @@
                 } else {
                     this.temp = this.books
                 }
-            }
+            },
         },
 
 
         methods: {
+
+        CsvExport () { // On Click CSV download button
+
+        // export json to Worksheet
+        var ws = XLSX.utils.json_to_sheet(this.temp)
+
+        // A workbook is the name given to file
+        var wb = XLSX.utils.book_new() // make Workbook
+
+        // add Worksheet to Workbook
+        // Workbook contains one or more worksheets
+        XLSX.utils.book_append_sheet(wb, ws, 'books') // sheetName is name of Worksheet
+        
+        // export Excel file
+        XLSX.writeFile(wb, 'book.csv') // name of the file is 'book.csv'
+
+        },
+
+        XmlExport () { 
+
+        var ws = XLSX.utils.json_to_sheet(this.temp)
+
+        var wb = XLSX.utils.book_new()
+
+        XLSX.utils.book_append_sheet(wb, ws, 'books')
+        
+        // export file
+        XLSX.writeFile(wb, 'book.xml') // name of the file is 'book.xml'
+
+        },
 
         //Sort by Title or Author with toggle
         sort(prop) {
@@ -163,7 +217,7 @@
                 }
             })
         },
-        
+
         // Modal Window for Editing
         editModalWindow(book){
            this.form.clear();
@@ -172,9 +226,10 @@
            $('#addNew').modal('show');
            this.form.fill(book)
         },
+
         updateBook(){
            this.form.put('api/book/'+this.form.id)
-               .then(()=>{
+               .then(() => {
 
                    Toast.fire({
                       icon: 'success',
@@ -189,42 +244,67 @@
                   console.log("Error.....")
                })
         },
+
         openModalWindow(){
            this.editMode = false
            this.form.reset();
            $('#addNew').modal('show');
         },
 
+        // Load initial instance of books
         loadBooks() {
+            axios.get("api/book").then(data => (this.books = this.temp = data.data));
+        },
 
-        axios.get("api/book").then( data => (this.books = this.temp = data.data));
+        // Load titles logic
+        loadTitles() {
+            if (this.handlerTitle == true) {
+                axios.get("api/title").then(data => (this.books = this.temp = data.data)); // Load titles
+            } if (this.handlerAuthor == true) {
+                axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors
+            } if (this.handlerTitle == false) {
+                if (this.handlerAuthor == true){
+                    axios.get("api/author").then(data => (this.books = this.temp = data.data)); // Load authors when uncheck title
+                }
+            } if (this.handlerTitle == false && this.handlerAuthor == false){
+                axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors when both unchecked
+            }
+        },
 
+        // Load authors logic
+        loadAuthors() {
+            if(this.handlerAuthor == true) {
+                axios.get("api/author").then(data => (this.books = this.temp = data.data)); // Load authors
+            } if (this.handlerTitle == true) {
+                axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors
+            } if (this.handlerAuthor == false) {
+                if(this.handlerTitle == true){
+                axios.get("api/title").then(data => (this.books = this.temp = data.data)); // Load titles when uncheck author
+                }
+            } if (this.handlerTitle == false && this.handlerAuthor == false) {
+                axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors when both unchecked
+            }
         },
 
         // Add New Book
         createBook(){
-
             this.$Progress.start()
-
             this.form.post('api/book')
                 .then(() => {
-                   
-                    Fire.$emit('AfterCreatedBookLoadIt'); //custom events
 
+                    Fire.$emit('AfterCreatedBookLoadIt'); //custom events
                         Toast.fire({
                           icon: 'success',
                           title: 'Book created successfully'
                         })
 
                         this.$Progress.finish()
-
                         $('#addNew').modal('hide');
-
                 })
+
                 .catch(() => {
                    console.log("Error......")
                 })
-
           },
 
           //Modal Window for Delete
@@ -238,11 +318,11 @@
               cancelButtonColor: '#d33',
               confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
-                
+
               if (result.value) {
                 //Send Request to server
                 this.form.delete('api/book/'+id)
-                    .then((response)=> {
+                    .then((response) => {
                             Swal.fire(
                               'Deleted!',
                               'Book deleted successfully',
@@ -265,9 +345,14 @@
         //Return List of Books after Add
         created() { 
             this.loadBooks();
-            Fire.$on('AfterCreatedBookLoadIt',()=>{ //custom events fire on
+            Fire.$on('AfterCreatedBookLoadIt', () => { //custom events fire on
                 this.loadBooks();
             });
         },
+
+
+
     }
+
+    
 </script> 

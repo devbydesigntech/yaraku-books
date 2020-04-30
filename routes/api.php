@@ -17,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::apiResources([
     'book' => 'API\BookController'
 ]);
+
+Route::apiResources([
+    'title' => 'API\TitleController'
+]);
+
+Route::apiResources([
+    'author' => 'API\AuthorController'
+]);
