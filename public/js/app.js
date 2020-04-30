@@ -1910,7 +1910,12 @@ module.exports = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var xlsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! xlsx */ "./node_modules/xlsx/xlsx.js");
 /* harmony import */ var xlsx__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(xlsx__WEBPACK_IMPORTED_MODULE_0__);
-//
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.common.js");
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vform__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
 //
 //
 //
@@ -2040,19 +2045,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       editMode: false,
-      books: null,
-      form: new Form({
-        title: null,
-        author: null
+      books: [],
+      form: new vform__WEBPACK_IMPORTED_MODULE_2__["Form"]({
+        title: '',
+        author: ''
       }),
       searchQuery: '',
       temp: '',
-      // sortBy: 'title',
-      // sortDirection: 'descending',
+      sortBy: 'title',
+      sortDirection: 'descending',
       handlerTitle: '',
       handlerAuthor: ''
     };
@@ -2125,6 +2133,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     updateBook: function updateBook() {
       this.form.put('api/book/' + this.form.id).then(function () {
+        var Fire = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
+        window.Fire = Fire;
         Toast.fire({
           icon: 'success',
           title: 'Book updated successfully'
@@ -2214,6 +2224,8 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$Progress.start();
       this.form.post('api/book').then(function () {
+        var Fire = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
+        window.Fire = Fire;
         Fire.$emit('AfterCreatedBookLoadIt'); //custom events
 
         Toast.fire({
@@ -2232,7 +2244,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteBook: function deleteBook(id) {
       var _this7 = this;
 
-      Swal.fire({
+      sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
@@ -2244,11 +2256,11 @@ __webpack_require__.r(__webpack_exports__);
         if (result.value) {
           //Send Request to server
           _this7.form["delete"]('api/book/' + id).then(function (response) {
-            Swal.fire('Deleted!', 'Book deleted successfully', 'success');
+            sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire('Deleted!', 'Book deleted successfully', 'success');
 
             _this7.loadBooks();
           })["catch"](function () {
-            Swal.fire({
+            sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
               icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!'
@@ -2263,6 +2275,8 @@ __webpack_require__.r(__webpack_exports__);
     var _this8 = this;
 
     this.loadBooks();
+    var Fire = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
+    window.Fire = Fire;
     Fire.$on('AfterCreatedBookLoadIt', function () {
       //custom events fire on
       _this8.loadBooks();
@@ -44321,10 +44335,7 @@ var render = function() {
                     }
                   }
                 },
-                [
-                  _vm._v("Title"),
-                  _vm.sortBy === "title" ? _c("span") : _vm._e()
-                ]
+                [_vm._v("Title")]
               ),
               _vm._v("\n                |\n                "),
               _c(
@@ -91856,7 +91867,7 @@ var Toast = sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.mixin({
     toast.addEventListener('mouseleave', sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.resumeTimer);
   }
 });
-window.Toast = Toast; //Import v-from
+window.Toast = Toast; //Import v-form
 
 
 window.Form = vform__WEBPACK_IMPORTED_MODULE_2__["Form"];

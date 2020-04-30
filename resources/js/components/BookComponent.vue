@@ -34,7 +34,7 @@
                 <!-- Sort -->
                 <div class="float-left mt-3">
                     <span>Sort: </span>
-                    <a @click="sort('title')" href="#">Title<span v-if="sortBy === 'title'"></span></a>
+                    <a @click="sort('title')" href="#">Title</a>
                     |
                     <a @click="sort('author')" href="#">Author<span v-if="sortBy === 'author'"></span></a>
                 </div>
@@ -57,15 +57,15 @@
                 <table class="table table-hover text-nowrap" id="mytable">
                   <thead class="thead-light">
                     <tr>
-                        <th >Title</th>
-                        <th >Author</th>
+                        <th>Title</th>
+                        <th>Author</th>
                         <th></th>
                   </tr> 
                   </thead> 
                     <tbody>
                     <tr v-for="book in temp" :key="book.id">
-                        <td >{{ book.title }}</td>
-                        <td >{{ book.author }}</td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
                         <td>
                             <!-- Edit/Delete -->
                             <a href="#" data-id="book.id" @click="editModalWindow(book)">
@@ -112,7 +112,6 @@
                         class="form-control" :class="{ 'is-invalid': form.errors.has('author') }">
                     <has-error :form="form" field="author"></has-error>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -129,20 +128,23 @@
 
 <script>
 import XLSX from 'xlsx'
+import Vue from 'vue'
+import { Form } from 'vform'
+import Swal from 'sweetalert2'
 
     export default {
         data() {
             return {
                 editMode: false,
-                books: null,
+                books: [],
                 form: new Form({
-                    title: null,
-                    author: null
+                    title: '',
+                    author: ''
                 }),
                 searchQuery: '',
                 temp: '',
-                // sortBy: 'title',
-                // sortDirection: 'descending',
+                sortBy: 'title',
+                sortDirection: 'descending',
                 handlerTitle: '',
                 handlerAuthor:''
 
@@ -229,6 +231,8 @@ import XLSX from 'xlsx'
         updateBook(){
            this.form.put('api/book/'+this.form.id)
                .then(() => {
+                    let Fire = new Vue()
+                    window.Fire = Fire;
 
                    Toast.fire({
                       icon: 'success',
@@ -290,6 +294,8 @@ import XLSX from 'xlsx'
             this.$Progress.start()
             this.form.post('api/book')
                 .then(() => {
+                    let Fire = new Vue()
+                    window.Fire = Fire;
 
                     Fire.$emit('AfterCreatedBookLoadIt'); //custom events
                         Toast.fire({
@@ -344,6 +350,8 @@ import XLSX from 'xlsx'
         //Return List of Books after Add
         created() { 
             this.loadBooks();
+            let Fire = new Vue()
+            window.Fire = Fire;
             Fire.$on('AfterCreatedBookLoadIt', () => { //custom events fire on
                 this.loadBooks();
             });

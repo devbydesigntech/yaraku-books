@@ -26,15 +26,15 @@ describe ('BookComponent', () => {
             status: 200,
             response: [
                 {
-                    title: "Test Title",
-                    author: "Test Author",
+                    title: "Test",
+                    author: "Test",
                 }
             ],
         });
 
         moxios.wait(() => {
             expect(
-                wrapper.html()).toContainer('Test Title');
+                wrapper.html()).toContain('Test');
             done();
         });
     });

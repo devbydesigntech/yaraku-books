@@ -34,7 +34,7 @@ const Toast = Swal.mixin({
 })
 window.Toast = Toast
 
-//Import v-from
+//Import v-form
 import { Form, HasError, AlertError } from 'vform'
 window.Form = Form;
 Vue.component(HasError.name, HasError)
