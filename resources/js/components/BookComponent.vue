@@ -220,7 +220,7 @@ import Swal from 'sweetalert2'
         },
 
         // Modal Window for Editing
-        editModalWindow(book){
+        editModalWindow(book) {
            this.form.clear();
            this.editMode = true
            this.form.reset();
@@ -228,7 +228,7 @@ import Swal from 'sweetalert2'
            this.form.fill(book)
         },
 
-        updateBook(){
+        updateBook() {
            this.form.put('api/book/'+this.form.id)
                .then(() => {
                     let Fire = new Vue()
@@ -243,12 +243,12 @@ import Swal from 'sweetalert2'
 
                     $('#addNew').modal('hide');
                })
-               .catch(()=>{
+               .catch(() => {
                   console.log("Error.....")
                })
         },
 
-        openModalWindow(){
+        openModalWindow() {
            this.editMode = false
            this.form.reset();
            $('#addNew').modal('show');
@@ -266,22 +266,22 @@ import Swal from 'sweetalert2'
             } if (this.handlerAuthor == true) {
                 axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors
             } if (this.handlerTitle == false) {
-                if (this.handlerAuthor == true){
+                if (this.handlerAuthor == true) {
                     axios.get("api/author").then(data => (this.books = this.temp = data.data)); // Load authors when uncheck title
                 }
-            } if (this.handlerTitle == false && this.handlerAuthor == false){
+            } if (this.handlerTitle == false && this.handlerAuthor == false) {
                 axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors when both unchecked
             }
         },
 
         // Load authors logic
         loadAuthors() {
-            if(this.handlerAuthor == true) {
+            if (this.handlerAuthor == true) {
                 axios.get("api/author").then(data => (this.books = this.temp = data.data)); // Load authors
             } if (this.handlerTitle == true) {
                 axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors
             } if (this.handlerAuthor == false) {
-                if(this.handlerTitle == true){
+                if(this.handlerTitle == true) {
                 axios.get("api/title").then(data => (this.books = this.temp = data.data)); // Load titles when uncheck author
                 }
             } if (this.handlerTitle == false && this.handlerAuthor == false) {
@@ -290,7 +290,7 @@ import Swal from 'sweetalert2'
         },
 
         // Add New Book
-        createBook(){
+        createBook() {
             this.$Progress.start()
             this.form.post('api/book')
                 .then(() => {
@@ -356,10 +356,5 @@ import Swal from 'sweetalert2'
                 this.loadBooks();
             });
         },
-
-
-
     }
-
-    
 </script> 
