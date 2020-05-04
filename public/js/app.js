@@ -2052,8 +2052,9 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       editMode: false,
-      books: [],
+      books: {},
       form: new vform__WEBPACK_IMPORTED_MODULE_2__["Form"]({
+        id: '',
         title: '',
         author: ''
       }),
@@ -2132,6 +2133,8 @@ __webpack_require__.r(__webpack_exports__);
       this.form.fill(book);
     },
     updateBook: function updateBook() {
+      var _this3 = this;
+
       this.form.put('api/book/' + this.form.id).then(function () {
         var Fire = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
         window.Fire = Fire;
@@ -2139,6 +2142,9 @@ __webpack_require__.r(__webpack_exports__);
           icon: 'success',
           title: 'Book updated successfully'
         });
+
+        _this3.loadBooks();
+
         Fire.$emit('AfterCreatedBookLoadIt');
         $('#addNew').modal('hide');
       })["catch"](function () {
@@ -2152,75 +2158,75 @@ __webpack_require__.r(__webpack_exports__);
     },
     // Load initial instance of books
     loadBooks: function loadBooks() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get("api/book").then(function (data) {
-        return _this3.books = _this3.temp = data.data;
+        return _this4.books = _this4.temp = data.data;
       });
     },
     // Load titles logic
     loadTitles: function loadTitles() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.handlerTitle == true) {
         axios.get("api/title").then(function (data) {
-          return _this4.books = _this4.temp = data.data;
+          return _this5.books = _this5.temp = data.data;
         }); // Load titles
       }
 
       if (this.handlerAuthor == true) {
         axios.get("api/book").then(function (data) {
-          return _this4.books = _this4.temp = data.data;
+          return _this5.books = _this5.temp = data.data;
         }); // Load titles and authors
       }
 
       if (this.handlerTitle == false) {
         if (this.handlerAuthor == true) {
           axios.get("api/author").then(function (data) {
-            return _this4.books = _this4.temp = data.data;
+            return _this5.books = _this5.temp = data.data;
           }); // Load authors when uncheck title
         }
       }
 
       if (this.handlerTitle == false && this.handlerAuthor == false) {
         axios.get("api/book").then(function (data) {
-          return _this4.books = _this4.temp = data.data;
+          return _this5.books = _this5.temp = data.data;
         }); // Load titles and authors when both unchecked
       }
     },
     // Load authors logic
     loadAuthors: function loadAuthors() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.handlerAuthor == true) {
         axios.get("api/author").then(function (data) {
-          return _this5.books = _this5.temp = data.data;
+          return _this6.books = _this6.temp = data.data;
         }); // Load authors
       }
 
       if (this.handlerTitle == true) {
         axios.get("api/book").then(function (data) {
-          return _this5.books = _this5.temp = data.data;
+          return _this6.books = _this6.temp = data.data;
         }); // Load titles and authors
       }
 
       if (this.handlerAuthor == false) {
         if (this.handlerTitle == true) {
           axios.get("api/title").then(function (data) {
-            return _this5.books = _this5.temp = data.data;
+            return _this6.books = _this6.temp = data.data;
           }); // Load titles when uncheck author
         }
       }
 
       if (this.handlerTitle == false && this.handlerAuthor == false) {
         axios.get("api/book").then(function (data) {
-          return _this5.books = _this5.temp = data.data;
+          return _this6.books = _this6.temp = data.data;
         }); // Load titles and authors when both unchecked
       }
     },
     // Add New Book
     createBook: function createBook() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.$Progress.start();
       this.form.post('api/book').then(function () {
@@ -2233,16 +2239,18 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Book created successfully'
         });
 
-        _this6.$Progress.finish();
+        _this7.$Progress.finish();
 
         $('#addNew').modal('hide');
+
+        _this7.loadBooks();
       })["catch"](function () {
         console.log("Error......");
       });
     },
     //Modal Window for Delete
     deleteBook: function deleteBook(id) {
-      var _this7 = this;
+      var _this8 = this;
 
       sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
         title: 'Are you sure?',
@@ -2255,10 +2263,10 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           //Send Request to server
-          _this7.form["delete"]('api/book/' + id).then(function (response) {
+          _this8.form["delete"]('api/book/' + id).then(function (response) {
             sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire('Deleted!', 'Book deleted successfully', 'success');
 
-            _this7.loadBooks();
+            _this8.loadBooks();
           })["catch"](function () {
             sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
               icon: 'error',
@@ -2272,14 +2280,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   //Return List of Books after Add
   created: function created() {
-    var _this8 = this;
+    var _this9 = this;
 
     this.loadBooks();
     var Fire = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
     window.Fire = Fire;
     Fire.$on('AfterCreatedBookLoadIt', function () {
       //custom events fire on
-      _this8.loadBooks();
+      _this9.loadBooks();
     });
   }
 });

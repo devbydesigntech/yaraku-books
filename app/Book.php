@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Book extends Model
 {
     protected $fillable = [
-        'title', 'author',
+        'id', 'title', 'author',
     ];
 
     protected $hidden = [
-        'id', 'created_at', 'updated_at',
+        'created_at', 'updated_at',
     ];
 }

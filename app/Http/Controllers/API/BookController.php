@@ -15,7 +15,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Book::get();
+        return Book::latest()->get();
     }
 
 

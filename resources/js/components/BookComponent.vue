@@ -136,8 +136,9 @@ import Swal from 'sweetalert2'
         data() {
             return {
                 editMode: false,
-                books: [],
+                books: {},
                 form: new Form({
+                    id: '',
                     title: '',
                     author: ''
                 }),
@@ -239,6 +240,8 @@ import Swal from 'sweetalert2'
                       title: 'Book updated successfully'
                     })
 
+                    this.loadBooks();
+
                     Fire.$emit('AfterCreatedBookLoadIt');
 
                     $('#addNew').modal('hide');
@@ -304,7 +307,9 @@ import Swal from 'sweetalert2'
                         })
 
                         this.$Progress.finish()
-                        $('#addNew').modal('hide');
+                        $('#addNew').modal('hide')
+
+                        this.loadBooks();
                 })
 
                 .catch(() => {
@@ -355,6 +360,6 @@ import Swal from 'sweetalert2'
             Fire.$on('AfterCreatedBookLoadIt', () => { //custom events fire on
                 this.loadBooks();
             });
-        },
+        }
     }
 </script> 
