@@ -30,7 +30,24 @@ npm run test
 ```
  
 ### Installation
-Clone or download the repository then deploy on `localhost:8001`.
+Clone or download the repository.
+
+`.env` settings:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=yaraku_books
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Seed the database for example data:
+```
+php artisan db:seed
+```
+
+Deploy on `localhost:8001`.
  
 ## Security
 If you discover any security related issues, please email devbydesign.tech@gmail.com.
