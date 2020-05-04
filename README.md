@@ -12,14 +12,14 @@ A simple CRUD web application that allows the user to Add, Edit, and Delete book
 Laravel backend with Vue frontend scaffolding. 
  
 ### devDependencies
-Vue-router
-SweetAlert2
-Vform
-SheetJS
-Axios
-mocha/mocha-webpack
-jsdom/jsdom-global
-Expect
+- Vue-router
+- SweetAlert2
+- Vform
+- SheetJS
+- Axios
+- mocha/mocha-webpack
+- jsdom/jsdom-global
+- Expect
  
 ### Testing 
 The test uses Laravel’s built in PHPunit test and vue-utils. 
