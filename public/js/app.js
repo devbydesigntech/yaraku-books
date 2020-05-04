@@ -2160,7 +2160,7 @@ __webpack_require__.r(__webpack_exports__);
     loadBooks: function loadBooks() {
       var _this4 = this;
 
-      axios.get("api/book").then(function (data) {
+      axios.get("/api/book").then(function (data) {
         return _this4.books = _this4.temp = data.data;
       });
     },
@@ -2169,27 +2169,35 @@ __webpack_require__.r(__webpack_exports__);
       var _this5 = this;
 
       if (this.handlerTitle == true) {
-        axios.get("api/title").then(function (data) {
+        axios.get("/api/title").then(function (data) {
           return _this5.books = _this5.temp = data.data;
         }); // Load titles
       }
 
       if (this.handlerAuthor == true) {
-        axios.get("api/book").then(function (data) {
-          return _this5.books = _this5.temp = data.data;
-        }); // Load titles and authors
-      }
-
-      if (this.handlerTitle == false) {
-        if (this.handlerAuthor == true) {
-          axios.get("api/author").then(function (data) {
+        if (this.handlerTitle == false) {
+          axios.get("/api/author").then(function (data) {
             return _this5.books = _this5.temp = data.data;
           }); // Load authors when uncheck title
         }
       }
 
+      if (this.handlerTitle == false) {
+        if (this.handlerAuthor == true) {
+          axios.get("/api/author").then(function (data) {
+            return _this5.books = _this5.temp = data.data;
+          }); // Load authors when uncheck title
+        }
+      }
+
+      if (this.handlerTitle == true && this.handlerAuthor == true) {
+        axios.get("/api/book").then(function (data) {
+          return _this5.books = _this5.temp = data.data;
+        }); // Load titles and authors when both checked
+      }
+
       if (this.handlerTitle == false && this.handlerAuthor == false) {
-        axios.get("api/book").then(function (data) {
+        axios.get("/api/book").then(function (data) {
           return _this5.books = _this5.temp = data.data;
         }); // Load titles and authors when both unchecked
       }
@@ -2199,27 +2207,35 @@ __webpack_require__.r(__webpack_exports__);
       var _this6 = this;
 
       if (this.handlerAuthor == true) {
-        axios.get("api/author").then(function (data) {
+        axios.get("/api/author").then(function (data) {
           return _this6.books = _this6.temp = data.data;
         }); // Load authors
       }
 
       if (this.handlerTitle == true) {
-        axios.get("api/book").then(function (data) {
-          return _this6.books = _this6.temp = data.data;
-        }); // Load titles and authors
-      }
-
-      if (this.handlerAuthor == false) {
-        if (this.handlerTitle == true) {
-          axios.get("api/title").then(function (data) {
+        if (this.handlerAuthor == false) {
+          axios.get("/api/title").then(function (data) {
             return _this6.books = _this6.temp = data.data;
           }); // Load titles when uncheck author
         }
       }
 
+      if (this.handlerAuthor == false) {
+        if (this.handlerTitle == true) {
+          axios.get("/api/title").then(function (data) {
+            return _this6.books = _this6.temp = data.data;
+          }); // Load titles when uncheck author
+        }
+      }
+
+      if (this.handlerTitle == true && this.handlerAuthor == true) {
+        axios.get("/api/book").then(function (data) {
+          return _this6.books = _this6.temp = data.data;
+        }); // Load titles and authors when both checked
+      }
+
       if (this.handlerTitle == false && this.handlerAuthor == false) {
-        axios.get("api/book").then(function (data) {
+        axios.get("/api/book").then(function (data) {
           return _this6.books = _this6.temp = data.data;
         }); // Load titles and authors when both unchecked
       }
@@ -2229,7 +2245,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this7 = this;
 
       this.$Progress.start();
-      this.form.post('api/book').then(function () {
+      this.form.post('/api/book').then(function () {
         var Fire = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
         window.Fire = Fire;
 
@@ -2264,7 +2280,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           //Send Request to server
-          _this8.form["delete"]('api/book/' + id).then(function (response) {
+          _this8.form["delete"]('/api/book/' + id).then(function (response) {
             sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire('Deleted!', 'Book deleted successfully', 'success');
 
             _this8.loadBooks();

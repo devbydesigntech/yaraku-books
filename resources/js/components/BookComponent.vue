@@ -259,43 +259,51 @@ import Swal from 'sweetalert2'
 
         // Load initial instance of books
         loadBooks() {
-            axios.get("api/book").then(data => (this.books = this.temp = data.data));
+            axios.get("/api/book").then(data => (this.books = this.temp = data.data));
         },
 
         // Load titles logic
         loadTitles() {
             if (this.handlerTitle == true) {
-                axios.get("api/title").then(data => (this.books = this.temp = data.data)); // Load titles
+                axios.get("/api/title").then(data => (this.books = this.temp = data.data)) // Load titles
             } if (this.handlerAuthor == true) {
-                axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors
+                if (this.handlerTitle == false) {
+                    axios.get("/api/author").then(data => (this.books = this.temp = data.data)) // Load authors when uncheck title
+                }
             } if (this.handlerTitle == false) {
                 if (this.handlerAuthor == true) {
-                    axios.get("api/author").then(data => (this.books = this.temp = data.data)); // Load authors when uncheck title
+                    axios.get("/api/author").then(data => (this.books = this.temp = data.data)) // Load authors when uncheck title
                 }
+            } if (this.handlerTitle == true && this.handlerAuthor == true) {
+                axios.get("/api/book").then(data => (this.books = this.temp = data.data)) // Load titles and authors when both checked
             } if (this.handlerTitle == false && this.handlerAuthor == false) {
-                axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors when both unchecked
+                axios.get("/api/book").then(data => (this.books = this.temp = data.data)) // Load titles and authors when both unchecked
             }
         },
 
         // Load authors logic
         loadAuthors() {
             if (this.handlerAuthor == true) {
-                axios.get("api/author").then(data => (this.books = this.temp = data.data)); // Load authors
+                axios.get("/api/author").then(data => (this.books = this.temp = data.data)) // Load authors
             } if (this.handlerTitle == true) {
-                axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors
+                if (this.handlerAuthor == false) {
+                    axios.get("/api/title").then(data => (this.books = this.temp = data.data)) // Load titles when uncheck author
+                }
             } if (this.handlerAuthor == false) {
                 if(this.handlerTitle == true) {
-                axios.get("api/title").then(data => (this.books = this.temp = data.data)); // Load titles when uncheck author
+                axios.get("/api/title").then(data => (this.books = this.temp = data.data)) // Load titles when uncheck author
                 }
+            } if (this.handlerTitle == true && this.handlerAuthor == true) {
+                axios.get("/api/book").then(data => (this.books = this.temp = data.data)) // Load titles and authors when both checked
             } if (this.handlerTitle == false && this.handlerAuthor == false) {
-                axios.get("api/book").then(data => (this.books = this.temp = data.data)); // Load titles and authors when both unchecked
+                axios.get("/api/book").then(data => (this.books = this.temp = data.data)) // Load titles and authors when both unchecked
             }
         },
 
         // Add New Book
         createBook() {
             this.$Progress.start()
-            this.form.post('api/book')
+            this.form.post('/api/book')
                 .then(() => {
                     let Fire = new Vue()
                     window.Fire = Fire;
@@ -332,7 +340,7 @@ import Swal from 'sweetalert2'
 
               if (result.value) {
                 //Send Request to server
-                this.form.delete('api/book/'+id)
+                this.form.delete('/api/book/'+id)
                     .then((response) => {
                             Swal.fire(
                               'Deleted!',
@@ -361,6 +369,6 @@ import Swal from 'sweetalert2'
             Fire.$on('AfterCreatedBookLoadIt', () => { //custom events fire on
                 this.loadBooks();
             });
-        }
+        },
     }
 </script> 
