@@ -15,7 +15,7 @@ class TitleController extends Controller
      */
     public function index()
     {
-        return Book::select('title')->get();
+        return Book::select('title')->latest()->get();
     }
 
 }

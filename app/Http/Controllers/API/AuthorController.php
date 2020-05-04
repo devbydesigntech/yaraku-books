@@ -15,7 +15,7 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        return Book::select('author')->get();
+        return Book::select('author')->latest()->get();
     }
 
 
