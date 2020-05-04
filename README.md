@@ -30,8 +30,7 @@ npm run test
 ```
  
 ### Installation
-Clone or download the repository.
-Deploy on `localhost:8001`.
+Clone or download the repository then deploy on `localhost:8001`.
  
 ## Security
 If you discover any security related issues, please email devbydesign.tech@gmail.com.
