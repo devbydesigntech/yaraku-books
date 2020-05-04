@@ -34,7 +34,7 @@
                 <!-- Sort -->
                 <div class="float-left mt-3">
                     <span>Sort: </span>
-                    <a @click="sort('title')" href="#">Title</a>
+                    <a @click="sort('title')" href="#">Title<span v-if="sortBy === 'title'"></span></a>
                     |
                     <a @click="sort('author')" href="#">Author<span v-if="sortBy === 'author'"></span></a>
                 </div>
@@ -136,7 +136,7 @@ import Swal from 'sweetalert2'
         data() {
             return {
                 editMode: false,
-                books: {},
+                books: [],
                 form: new Form({
                     id: '',
                     title: '',
@@ -230,7 +230,7 @@ import Swal from 'sweetalert2'
         },
 
         updateBook() {
-           this.form.put('api/book/'+this.form.id)
+           this.form.put('/api/book/'+this.form.id)
                .then(() => {
                     let Fire = new Vue()
                     window.Fire = Fire;
@@ -240,7 +240,7 @@ import Swal from 'sweetalert2'
                       title: 'Book updated successfully'
                     })
 
-                    this.loadBooks();
+                    this.loadBooks()
 
                     Fire.$emit('AfterCreatedBookLoadIt');
 
@@ -300,6 +300,8 @@ import Swal from 'sweetalert2'
                     let Fire = new Vue()
                     window.Fire = Fire;
 
+                    this.loadBooks()
+
                     Fire.$emit('AfterCreatedBookLoadIt'); //custom events
                         Toast.fire({
                           icon: 'success',
@@ -307,9 +309,8 @@ import Swal from 'sweetalert2'
                         })
 
                         this.$Progress.finish()
-                        $('#addNew').modal('hide')
+                        $('#addNew').modal('hide');
 
-                        this.loadBooks();
                 })
 
                 .catch(() => {

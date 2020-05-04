@@ -2052,7 +2052,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       editMode: false,
-      books: {},
+      books: [],
       form: new vform__WEBPACK_IMPORTED_MODULE_2__["Form"]({
         id: '',
         title: '',
@@ -2135,7 +2135,7 @@ __webpack_require__.r(__webpack_exports__);
     updateBook: function updateBook() {
       var _this3 = this;
 
-      this.form.put('api/book/' + this.form.id).then(function () {
+      this.form.put('/api/book/' + this.form.id).then(function () {
         var Fire = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
         window.Fire = Fire;
         Toast.fire({
@@ -2232,6 +2232,9 @@ __webpack_require__.r(__webpack_exports__);
       this.form.post('api/book').then(function () {
         var Fire = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
         window.Fire = Fire;
+
+        _this7.loadBooks();
+
         Fire.$emit('AfterCreatedBookLoadIt'); //custom events
 
         Toast.fire({
@@ -2242,8 +2245,6 @@ __webpack_require__.r(__webpack_exports__);
         _this7.$Progress.finish();
 
         $('#addNew').modal('hide');
-
-        _this7.loadBooks();
       })["catch"](function () {
         console.log("Error......");
       });
@@ -44343,7 +44344,10 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("Title")]
+                [
+                  _vm._v("Title"),
+                  _vm.sortBy === "title" ? _c("span") : _vm._e()
+                ]
               ),
               _vm._v("\n                |\n                "),
               _c(
